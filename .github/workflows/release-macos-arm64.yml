@@ -40,7 +40,7 @@ jobs:
         run: npm ci
 
       - name: 建置應用程式 (arm64)
-        run: npm run tauri build
+        run: npm run tauri build -- --target aarch64-apple-darwin
 
       - name: 列出產物目錄 (macOS)
         run: ls src-tauri/target/aarch64-apple-darwin/release/bundle/dmg/
