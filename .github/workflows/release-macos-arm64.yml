@@ -25,7 +25,7 @@ jobs:
       - name: 安裝 Rust 工具鏈
         uses: dtolnay/rust-toolchain@stable
 
-      - name: 快取 Rust 相依套件 (aarch64-apple-darwin)
+      - name: 安裝 Rust 目標 (arm64-apple-darwin)
         run: rustup target add aarch64-apple-darwin
 
       - name: 快取 Rust 相依套件
