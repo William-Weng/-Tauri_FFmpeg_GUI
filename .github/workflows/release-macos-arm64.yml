@@ -52,7 +52,7 @@ jobs:
           path: src-tauri/target/aarch64-apple-darwin/release/bundle/dmg/*.dmg
 
       - name: 取得 dmg 檔名
-        run: echo "DMG=$(ls src-tauri/aarch64-apple-darwin/target/release/bundle/dmg/*.dmg)" >> $GITHUB_ENV
+        run: echo "DMG=$(ls src-tauri/target/aarch64-apple-darwin/release/bundle/dmg/*.dmg)" >> $GITHUB_ENV
 
       - name: 建立 Release
         id: create_release
