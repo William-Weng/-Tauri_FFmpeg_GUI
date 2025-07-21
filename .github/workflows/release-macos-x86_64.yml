@@ -26,7 +26,7 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
 
       - name: 快取 Rust 相依套件 (x86_64-apple-darwin)
-        uses: rustup target add x86_64-apple-darwin
+        run: rustup target add x86_64-apple-darwin
 
       - name: 快取 Rust 相依套件
         uses: Swatinem/rust-cache@v2
