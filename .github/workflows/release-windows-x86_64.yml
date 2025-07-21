@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   build:
-    name: 建立 Windows 可執行檔
+    name: 建立 Windows 可執行檔 (x86_64)
     runs-on: windows-latest
     steps:
       - name: 取得原始碼

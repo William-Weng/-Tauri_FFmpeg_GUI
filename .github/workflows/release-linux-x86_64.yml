@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   build:
-    name: 建立 Linux 可執行檔
+    name: 建立 Linux 可執行檔 (x86_64)
     runs-on: ubuntu-latest
     steps:
       - name: 取得原始碼
@@ -30,6 +30,9 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf xdg-utils
 
+      - name: 安裝 Rust 目標 (x86_64-unknown-linux-gnu)
+        run: rustup target add x86_64-unknown-linux-gnu
+
       - name: 快取 Rust 相依套件
         uses: Swatinem/rust-cache@v2
 
@@ -42,14 +45,14 @@ jobs:
         run: npm ci
 
       - name: 建置應用程式
-        run: npm run tauri build
+        run: npm run tauri build -- --x86_64-unknown-linux-gnu
       
       - name: 列出產物目錄 (Ubuntu)
-        run: ls src-tauri/target/release/
+        run: ls src-tauri/target/x86_64-unknown-linux-gnu/release/
 
       - name: 取得 AppImage 檔名
         id: get_appimage_name
-        run: echo "APPIMAGE=src-tauri/target/release/tauri_ffmpeg_gui" >> $GITHUB_ENV
+        run: echo "APPIMAGE=src-tauri/target/x86_64-unknown-linux-gnu/release/tauri_ffmpeg_gui" >> $GITHUB_ENV
 
       - name: 上傳產物
         uses: actions/upload-artifact@v4

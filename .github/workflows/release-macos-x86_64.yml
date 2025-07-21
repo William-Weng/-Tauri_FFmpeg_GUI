@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   build:
-    name: 建立 macOS 應用程式
+    name: 建立 macOS 應用程式 (x86_64)
     runs-on: macos-latest
     steps:
       - name: 取得原始碼
