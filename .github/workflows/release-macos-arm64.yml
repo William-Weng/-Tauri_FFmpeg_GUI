@@ -1,4 +1,4 @@
-name: 建立 macOS 版本
+name: 建立 macOS 版本 (arm64)
 
 on:
   push:
