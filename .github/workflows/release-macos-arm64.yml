@@ -42,13 +42,7 @@ jobs:
       - name: 列出產物目錄 (macOS)
         run: ls src-tauri/target/release/bundle/dmg/
 
-      - name: 上傳產物 (app)
-        uses: actions/upload-artifact@v4
-        with:
-          name: FFmpegGUI-macos-arm64.app
-          path: src-tauri/target/release/bundle/macos/*.app
-
-      - name: 上傳產物 (dmg)
+      - name: 上傳產物
         uses: actions/upload-artifact@v4
         with:
           name: FFmpegGUI-macos-arm64.dmg
@@ -56,9 +50,6 @@ jobs:
 
       - name: 取得 dmg 檔名
         run: echo "DMG=$(ls src-tauri/target/release/bundle/dmg/*.dmg)" >> $GITHUB_ENV
-
-      - name: 取得 app 檔名
-        run: echo "APP=$(ls src-tauri/target/release/bundle/macos/*.app)" >> $GITHUB_ENV
 
       - name: 建立 Release
         id: create_release
@@ -69,22 +60,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: 上傳執行檔到 Release (app)
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{ env.APP }}
-          asset_name: FFmpegGUI-macos-aarch64.app
-          asset_content_type: application/octet-stream
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: 上傳執行檔到 Release (dmg)
+      - name: 上傳執行檔到 Release (arm64)
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ${{ env.DMG }}
-          asset_name: FFmpegGUI-macos-aarch64.dmg
+          asset_name: FFmpegGUI-macos-arm64.dmg
           asset_content_type: application/octet-stream
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
