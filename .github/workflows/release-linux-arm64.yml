@@ -35,7 +35,7 @@ jobs:
       - name: 設定相關環境變數
         run: | 
           target="aarch64-unknown-linux-gnu"
-          isa="amd64"
+          isa="arm64"
           echo "TARGET=$target" >> $GITHUB_ENV
           echo "FILENAME=FFmpegGUI_linux-$isa.AppImage" >> $GITHUB_ENV
 
