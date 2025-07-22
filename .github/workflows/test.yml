@@ -35,7 +35,7 @@ jobs:
               repo: context.repo.repo,
               tag: tag
             });
-            
+
             console.log('upload_url =>', release.data.upload_url);
 
             return release.data.upload_url;
@@ -43,4 +43,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 列印 upload_url
-        run: echo "${{ toJson(steps.get_release.outputs) }}"
+        run: echo "${{ toJson(steps.get_release.outputs.result) }}"
