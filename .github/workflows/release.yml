@@ -35,7 +35,7 @@ jobs:
       - name: 設定相關環境變數
         run: | 
           $target = "x86_64-pc-windows-msvc"
-          $isa = "amd64"
+          $isa = "x86_64"
           echo "TARGET=$target" | Add-Content -Path $env:GITHUB_ENV
           echo "FILENAME=FFmpegGUI-windows-$isa.exe" | Add-Content -Path $env:GITHUB_ENV
           echo "FILEPATH=src-tauri/target/$target/release/tauri_ffmpeg_gui.exe" | Add-Content -Path $env:GITHUB_ENV
@@ -159,7 +159,7 @@ jobs:
       - name: 設定相關環境變數
         run: | 
           target="x86_64-apple-darwin"
-          isa="amd64"
+          isa="x86_64"
           echo "TARGET=$target" >> $GITHUB_ENV
           echo "FILENAME=FFmpegGUI_macOS-$isa.dmg" >> $GITHUB_ENV
 
