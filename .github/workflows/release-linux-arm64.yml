@@ -27,15 +27,15 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  build-linux-arm64:
-    name: Linux ARM64
+  build-linux-x86_64:
+    name: Linux x86_64
     runs-on: ubuntu-latest
     needs: create-release
     steps:
       - name: 設定相關環境變數
         run: | 
-          target="aarch64-unknown-linux-gnu"
-          isa="arm64"
+          target="x86_64-unknown-linux-gnu"
+          isa="x86_64"
           echo "TARGET=$target" >> $GITHUB_ENV
           echo "FILENAME=FFmpegGUI_linux-$isa.AppImage" >> $GITHUB_ENV
 
@@ -72,12 +72,6 @@ jobs:
       - name: 建置應用程式
         run: npm run tauri build -- --target ${{ env.TARGET }}
       
-      - name: 列出產物目錄
-        run: ls src-tauri/target/${{ env.TARGET }}/release/
-
-      - name: 列出產物目錄
-        run: ls src-tauri/target/${{ env.TARGET }}/release/bundle/
-
       - name: 列出產物目錄
         run: ls src-tauri/target/${{ env.TARGET }}/release/bundle/appimage/
 
