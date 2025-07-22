@@ -28,7 +28,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   build-windows-x86_64:
-    name: x86_64-pc-windows-msvc
+    name: Windows x86_64
     runs-on: windows-latest
     needs: create-release
     steps:
@@ -39,7 +39,6 @@ jobs:
           echo "TARGET=$target" | Add-Content -Path $env:GITHUB_ENV
           echo "FILENAME=FFmpegGUI-windows-$isa.exe" | Add-Content -Path $env:GITHUB_ENV
           echo "FILEPATH=src-tauri/target/$target/release/tauri_ffmpeg_gui.exe" | Add-Content -Path $env:GITHUB_ENV
-          echo "UPLOAD_URL='${{ needs.create-release.outputs.upload_url }}'" | Add-Content -Path $env:GITHUB_ENV
 
       - name: 取得原始碼
         uses: actions/checkout@v4
@@ -82,7 +81,7 @@ jobs:
       - name: 上傳執行檔到 Release
         uses: actions/upload-release-asset@v1
         with:
-          upload_url: ${{ env.UPLOAD_URL }}
+          upload_url: ${{ needs.create-release.outputs.upload_url }}
           asset_path: ${{ env.FILEPATH }}
           asset_name: ${{ env.FILENAME }}
           asset_content_type: application/octet-stream
@@ -90,7 +89,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   build-windows-arm64:
-    name: aarch64-pc-windows-msvc
+    name: Windows ARM64
     runs-on: windows-latest
     needs: create-release
     steps:
@@ -101,7 +100,6 @@ jobs:
           echo "TARGET=$target" | Add-Content -Path $env:GITHUB_ENV
           echo "FILENAME=FFmpegGUI_windows-$isa.exe" | Add-Content -Path $env:GITHUB_ENV
           echo "FILEPATH=src-tauri/target/$target/release/tauri_ffmpeg_gui.exe" | Add-Content -Path $env:GITHUB_ENV
-          echo "UPLOAD_URL='${{ needs.create-release.outputs.upload_url }}'" | Add-Content -Path $env:GITHUB_ENV
 
       - name: 取得原始碼
         uses: actions/checkout@v4
@@ -144,7 +142,7 @@ jobs:
       - name: 上傳執行檔到 Release
         uses: actions/upload-release-asset@v1
         with:
-          upload_url: ${{ env.UPLOAD_URL }}
+          upload_url: ${{ needs.create-release.outputs.upload_url }}
           asset_path: ${{ env.FILEPATH }}
           asset_name: ${{ env.FILENAME }}
           asset_content_type: application/octet-stream
@@ -152,7 +150,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   build-macOS-x86_64:
-    name: x86_64-apple-darwin
+    name: macOS x86_64
     runs-on: macos-latest
     needs: create-release
     steps:
@@ -190,10 +188,10 @@ jobs:
       - name: 安裝前端相依套件 (package-lock.json)
         run: npm ci
 
-      - name: 建置應用程式 (arm64)
+      - name: 建置應用程式
         run: npm run tauri build -- --target ${{ env.TARGET }}
 
-      - name: 列出產物目錄 (macOS)
+      - name: 列出產物目錄
         run: ls src-tauri/target/${{ env.TARGET }}/release/bundle/dmg/
 
       - name: 上傳產物
@@ -202,10 +200,10 @@ jobs:
           name: ${{ env.FILENAME }}
           path: ${{ env.FILEPATH }}
 
-      - name: 上傳執行檔到 Release (arm64)
+      - name: 上傳執行檔到 Release
         uses: actions/upload-release-asset@v1
         with:
-          upload_url: ${{ env.UPLOAD_URL }}
+          upload_url: ${{ needs.create-release.outputs.upload_url }}
           asset_path: ${{ env.FILEPATH }}
           asset_name: ${{ env.FILENAME }}
           asset_content_type: application/octet-stream
@@ -213,7 +211,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   build-macOS-arm64:
-    name: aarch64-apple-darwin
+    name: macOS ARM64
     runs-on: macos-latest
     needs: create-release
     steps:
@@ -251,10 +249,10 @@ jobs:
       - name: 安裝前端相依套件 (package-lock.json)
         run: npm ci
 
-      - name: 建置應用程式 (arm64)
+      - name: 建置應用程式
         run: npm run tauri build -- --target ${{ env.TARGET }}
 
-      - name: 列出產物目錄 (macOS)
+      - name: 列出產物目錄
         run: ls src-tauri/target/${{ env.TARGET }}/release/bundle/dmg/
 
       - name: 上傳產物
@@ -263,10 +261,10 @@ jobs:
           name: ${{ env.FILENAME }}
           path: ${{ env.FILEPATH }}
 
-      - name: 上傳執行檔到 Release (arm64)
+      - name: 上傳執行檔到 Release
         uses: actions/upload-release-asset@v1
         with:
-          upload_url: ${{ env.UPLOAD_URL }}
+          upload_url: ${{ needs.create-release.outputs.upload_url }}
           asset_path: ${{ env.FILEPATH }}
           asset_name: ${{ env.FILENAME }}
           asset_content_type: application/octet-stream
