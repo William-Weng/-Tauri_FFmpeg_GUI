@@ -1,4 +1,4 @@
-name: 3. 建立 Windows 版本 (arm64)
+name: 4. 建立 Windows 版本 (aarch64-pc-windows-msvc)
 
 on:
   push:
@@ -11,22 +11,28 @@ permissions:
 
 jobs:
   build:
-    name: 建立 Windows 可執行檔 (arm64)
+    name: 建立 Windows 可執行檔
     runs-on: windows-latest
     steps:
       - name: 取得原始碼
         uses: actions/checkout@v4
 
-      - name: 設定 Node.js (v20)
+      - name: 設定 Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
+      - name: 設定相關環境變數
+        run: | 
+          echo "TARGET=aarch64-pc-windows-msvc" | Add-Content -Path $env:GITHUB_ENV
+          echo "FILENAME=FFmpegGUI-windows-arm64.exe" | Add-Content -Path $env:GITHUB_ENV
+          echo "FILEPATH=src-tauri/target/${{ env.TARGET }}/release/tauri_ffmpeg_gui.exe" | Add-Content -Path $env:GITHUB_ENV
+
       - name: 安裝 Rust 工具鏈
         uses: dtolnay/rust-toolchain@stable
 
-      - name: 安裝 Rust 目標 (aarch64-pc-windows-msvc)
-        run: rustup target add aarch64-pc-windows-msvc
+      - name: 安裝 Rust 目標
+        run: rustup target add ${{ env.TARGET }}
 
       - name: 快取 Rust 相依套件
         uses: Swatinem/rust-cache@v2
@@ -39,22 +45,19 @@ jobs:
       - name: 安裝前端相依套件 (package-lock.json)
         run: npm ci
 
-      - name: 建置應用程式 (arm64)
-        run: npm run tauri build -- --target aarch64-pc-windows-msvc
+      - name: 建置應用程式
+        run: npm run tauri build -- --target ${{ env.TARGET }}
       
-      - name: 列出產物目錄 (Windows)
-        run: dir src-tauri/target/aarch64-pc-windows-msvc/release/
+      - name: 列出產物目錄
+        run: dir src-tauri/target/${{ env.TARGET }}/release/
 
       - name: 上傳產物
         id: upload_artifact
         uses: actions/upload-artifact@v4
         with:
-          name: FFmpegGUI-windows-arm64.exe
-          path: src-tauri/target/aarch64-pc-windows-msvc/release/tauri_ffmpeg_gui.exe
+          name: ${{ env.FILENAME }}
+          path: ${{ env.FILEPATH }}
       
-      - name: 取得 exe 檔名
-        run: echo "EXE=src-tauri/target/aarch64-pc-windows-msvc/release/tauri_ffmpeg_gui.exe" | Add-Content -Path $env:GITHUB_ENV
-
       - name: 建立 Release
         id: create_release
         uses: actions/create-release@v1
@@ -64,12 +67,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: 上傳執行檔到 Release (arm64)
+      - name: 上傳執行檔到 Release
         uses: actions/upload-release-asset@v1
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{ env.EXE }}
-          asset_name: FFmpegGUI-windows-arm64.exe
+          upload_url: ${{ steps.get_release.outputs.result.upload_url }}
+          asset_path: ${{ env.FILEPATH }}
+          asset_name: ${{ env.FILENAME }}
           asset_content_type: application/octet-stream
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
