@@ -39,4 +39,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 列印 upload_url
-        run: echo "${{ steps.get_release.outputs }}"
+        run: echo "${{ toJson(steps.get_release.outputs) }}"
