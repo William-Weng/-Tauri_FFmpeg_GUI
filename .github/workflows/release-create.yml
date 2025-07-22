@@ -1,4 +1,4 @@
-name: 建立 Release（僅建立，不上傳檔案）
+name: 1. 建立 Release（僅建立，不上傳檔案）
 
 on:
   push:
@@ -39,4 +39,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 列印 upload_url
-        run: echo "${{ steps.get_release.outputs.result.upload_url }}"
+        run: echo "${{ steps.get_release.outputs }}"
