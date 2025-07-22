@@ -35,7 +35,7 @@ jobs:
       - name: 設定相關環境變數
         run: | 
           $target = "x86_64-pc-windows-msvc"
-          $isa = "x86_64"
+          $isa = "amd64"
           echo "TARGET=$target" | Add-Content -Path $env:GITHUB_ENV
           echo "FILENAME=FFmpegGUI-windows-$isa.exe" | Add-Content -Path $env:GITHUB_ENV
           echo "FILEPATH=src-tauri/target/$target/release/tauri_ffmpeg_gui.exe" | Add-Content -Path $env:GITHUB_ENV
@@ -71,7 +71,7 @@ jobs:
       - name: 列出產物目錄
         run: dir src-tauri/target/${{ env.TARGET }}/release/
 
-      - name: 上傳產物
+      - name: 上傳檔案
         id: upload_artifact
         uses: actions/upload-artifact@v4
         with:
@@ -132,7 +132,7 @@ jobs:
       - name: 列出產物目錄
         run: dir src-tauri/target/${{ env.TARGET }}/release/
 
-      - name: 上傳產物
+      - name: 上傳檔案
         id: upload_artifact
         uses: actions/upload-artifact@v4
         with:
@@ -157,7 +157,7 @@ jobs:
       - name: 設定相關環境變數
         run: | 
           target="x86_64-apple-darwin"
-          isa="x86_64"
+          isa="amd64"
           echo "TARGET=$target" >> $GITHUB_ENV
           echo "FILENAME=FFmpegGUI_macOS-$isa.dmg" >> $GITHUB_ENV
 
@@ -195,7 +195,7 @@ jobs:
       - name: 設定 FILEPATH 變數
         run: echo "FILEPATH=$(ls src-tauri/target/${{ env.TARGET }}/release/bundle/dmg/*.dmg)" >> $GITHUB_ENV
 
-      - name: 上傳產物
+      - name: 上傳檔案
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.FILENAME }}
@@ -257,7 +257,7 @@ jobs:
       - name: 設定 FILEPATH 變數
         run: echo "FILEPATH=$(ls src-tauri/target/${{ env.TARGET }}/release/bundle/dmg/*.dmg)" >> $GITHUB_ENV
 
-      - name: 上傳產物
+      - name: 上傳檔案
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.FILENAME }}
@@ -397,7 +397,7 @@ jobs:
       - name: 設定 FILEPATH 變數
         run: echo "FILEPATH=$(ls src-tauri/target/${{ env.TARGET }}/release/bundle/appimage/*.AppImage)" >> $GITHUB_ENV
 
-      - name: 上傳產物
+      - name: 上傳檔案
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.FILENAME }}

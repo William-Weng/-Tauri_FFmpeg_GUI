@@ -27,15 +27,15 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  build-linux-x86_64:
-    name: Linux x86_64
+  build-linux-arm64:
+    name: Linux ARM64 建置
     runs-on: ubuntu-latest
     needs: create-release
     steps:
       - name: 設定相關環境變數
         run: | 
-          target="x86_64-unknown-linux-gnu"
-          isa="x86_64"
+          target="aarch64-unknown-linux-gnu"
+          isa="amd64"
           echo "TARGET=$target" >> $GITHUB_ENV
           echo "FILENAME=FFmpegGUI_linux-$isa.AppImage" >> $GITHUB_ENV
 
