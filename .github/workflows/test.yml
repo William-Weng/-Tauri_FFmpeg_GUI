@@ -38,7 +38,7 @@ jobs:
 
             console.log('upload_url =>', release.data.upload_url);
 
-            return release.data.upload_url;
+            return release.data;
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
