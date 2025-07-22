@@ -1,4 +1,4 @@
-name: 1. 建立 Release（僅建立，不上傳檔案）
+name: 1. 建立 Release
 
 on:
   push:
