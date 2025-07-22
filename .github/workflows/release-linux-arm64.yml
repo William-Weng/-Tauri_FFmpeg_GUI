@@ -1,4 +1,4 @@
-name: 6. 建立 Linux 版本 (arm64)
+name: 5. 建立 Linux 版本 (arm64)
 
 on:
   push:

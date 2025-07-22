@@ -1,4 +1,4 @@
-name: 7. 建立 Linux 版本 (x86_64)
+name: 6. 建立 Linux 版本 (x86_64)
 
 on:
   push:
