@@ -59,7 +59,7 @@ jobs:
 
       - name: 輸出 系統架構 / Node.js版本 / Rust版本
         run: |
-          var
+          [System.Environment]::OSVersion.Version
           node --version
           rustc --version
 
@@ -121,7 +121,7 @@ jobs:
 
       - name: 輸出 系統架構 / Node.js版本 / Rust版本
         run: |
-          var
+          [System.Environment]::OSVersion.Version
           node --version
           rustc --version
 
