@@ -28,7 +28,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   build-windows-x86_64:
-    name: 建立 Windows 可執行檔 (x86_64-pc-windows-msvc)
+    name: x86_64-pc-windows-msvc
     runs-on: windows-latest
     needs: create-release
     steps:
@@ -89,7 +89,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   build-windows-arm64:
-    name: 建立 Windows 可執行檔 (aarch64-pc-windows-msvc)
+    name: aarch64-pc-windows-msvc
     runs-on: windows-latest
     needs: create-release
     steps:
