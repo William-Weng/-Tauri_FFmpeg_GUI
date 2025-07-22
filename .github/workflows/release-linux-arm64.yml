@@ -45,7 +45,7 @@ jobs:
       - name: 安裝 Linux 相依套件
         run: |
           sudo apt-get update
-          sudo apt-get install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu pkg-config-aarch64-linux-gnu
+          sudo apt-get install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
           sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf xdg-utils
 
       - name: 設定 Node.js
@@ -71,6 +71,8 @@ jobs:
         run: npm ci
 
       - name: 建置應用程式
+        env:
+          PKG_CONFIG_ALLOW_CROSS: 1
         run: npm run tauri build -- --target ${{ env.TARGET }}
       
       - name: 列出產物目錄
