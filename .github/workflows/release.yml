@@ -160,8 +160,6 @@ jobs:
           isa="x86_64"
           echo "TARGET=$target" >> $GITHUB_ENV
           echo "FILENAME=FFmpegGUI_macOS-$isa.dmg" >> $GITHUB_ENV
-          echo "FILEPATH=$(ls src-tauri/target/$target/release/bundle/dmg/*.dmg)" >> $GITHUB_ENV
-          echo "UPLOAD_URL=${{ needs.create-release.outputs.upload_url }}" >> $GITHUB_ENV
 
       - name: 取得原始碼
         uses: actions/checkout@v4
@@ -193,6 +191,9 @@ jobs:
 
       - name: 列出產物目錄
         run: ls src-tauri/target/${{ env.TARGET }}/release/bundle/dmg/
+
+      - name: 設定 FILEPATH 變數
+        run: echo "FILEPATH=$(ls src-tauri/target/${{ env.TARGET }}/release/bundle/dmg/*.dmg)" >> $GITHUB_ENV
 
       - name: 上傳產物
         uses: actions/upload-artifact@v4
@@ -221,8 +222,6 @@ jobs:
           isa="arm64"
           echo "TARGET=$target" >> $GITHUB_ENV
           echo "FILENAME=FFmpegGUI_macOS-$isa.dmg" >> $GITHUB_ENV
-          echo "FILEPATH=$(ls src-tauri/target/$target/release/bundle/dmg/*.dmg)" >> $GITHUB_ENV
-          echo "UPLOAD_URL=${{ needs.create-release.outputs.upload_url }}" >> $GITHUB_ENV
 
       - name: 取得原始碼
         uses: actions/checkout@v4
@@ -254,6 +253,9 @@ jobs:
 
       - name: 列出產物目錄
         run: ls src-tauri/target/${{ env.TARGET }}/release/bundle/dmg/
+      
+      - name: 設定 FILEPATH 變數
+        run: echo "FILEPATH=$(ls src-tauri/target/${{ env.TARGET }}/release/bundle/dmg/*.dmg)" >> $GITHUB_ENV
 
       - name: 上傳產物
         uses: actions/upload-artifact@v4
