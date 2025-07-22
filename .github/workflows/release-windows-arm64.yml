@@ -11,9 +11,16 @@ permissions:
 
 jobs:
   build:
-    name: 建立 Windows 可執行檔
+    name: 建立 Windows 可執行檔 (aarch64-pc-windows-msvc)
     runs-on: windows-latest
     steps:
+      - name: 設定相關環境變數
+        run: |
+          $target = "aarch64-pc-windows-msvc"
+          echo "TARGET=$target" | Add-Content -Path $env:GITHUB_ENV
+          echo "FILENAME=FFmpegGUI-windows-arm64.exe" | Add-Content -Path $env:GITHUB_ENV
+          echo "FILEPATH=src-tauri/target/$target/release/tauri_ffmpeg_gui.exe" | Add-Content -Path $env:GITHUB_ENV
+
       - name: 取得原始碼
         uses: actions/checkout@v4
 
@@ -21,12 +28,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-
-      - name: 設定相關環境變數
-        run: | 
-          echo "TARGET=aarch64-pc-windows-msvc" | Add-Content -Path $env:GITHUB_ENV
-          echo "FILENAME=FFmpegGUI-windows-arm64.exe" | Add-Content -Path $env:GITHUB_ENV
-          echo "FILEPATH=src-tauri/target/${{ env.TARGET }}/release/tauri_ffmpeg_gui.exe" | Add-Content -Path $env:GITHUB_ENV
 
       - name: 安裝 Rust 工具鏈
         uses: dtolnay/rust-toolchain@stable
