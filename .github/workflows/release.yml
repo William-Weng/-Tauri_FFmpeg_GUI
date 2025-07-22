@@ -316,7 +316,7 @@ jobs:
         run: npm ci
 
       - name: 建置應用程式
-        run: npm run tauri build -- ${{ env.TARGET }}
+        run: npm run tauri build -- --target ${{ env.TARGET }}
       
       - name: 列出產物目錄
         run: ls src-tauri/target/${{ env.TARGET }}/release/bundle/appimage/
@@ -392,8 +392,14 @@ jobs:
         run: npm ci
 
       - name: 建置應用程式
-        run: npm run tauri build -- ${{ env.TARGET }}
+        run: npm run tauri build -- --target ${{ env.TARGET }}
       
+      - name: 列出產物目錄
+        run: ls src-tauri/target/${{ env.TARGET }}/release/
+
+      - name: 列出產物目錄
+        run: ls src-tauri/target/${{ env.TARGET }}/release/bundle/
+
       - name: 列出產物目錄
         run: ls src-tauri/target/${{ env.TARGET }}/release/bundle/appimage/
 
