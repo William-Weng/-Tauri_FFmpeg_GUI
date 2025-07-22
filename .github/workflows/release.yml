@@ -57,8 +57,9 @@ jobs:
       - name: 快取 Rust 相依套件
         uses: Swatinem/rust-cache@v2
 
-      - name: 輸出 Node.js版本 / Rust版本
+      - name: 輸出 系統架構 / Node.js版本 / Rust版本
         run: |
+          var
           node --version
           rustc --version
 
@@ -118,8 +119,9 @@ jobs:
       - name: 快取 Rust 相依套件
         uses: Swatinem/rust-cache@v2
 
-      - name: 輸出 Node.js版本 / Rust版本
+      - name: 輸出 系統架構 / Node.js版本 / Rust版本
         run: |
+          var
           node --version
           rustc --version
 
@@ -178,9 +180,10 @@ jobs:
       - name: 快取 Rust 相依套件
         uses: Swatinem/rust-cache@v2
 
-      - name: 輸出 Node.js版本 / Rust版本
+      - name: 輸出 系統架構 / Node.js版本 / Rust版本
         run: |
-          node --version 
+          uname -m
+          node --version
           rustc --version
       
       - name: 安裝前端相依套件 (package-lock.json)
@@ -240,9 +243,10 @@ jobs:
       - name: 快取 Rust 相依套件
         uses: Swatinem/rust-cache@v2
 
-      - name: 輸出 Node.js版本 / Rust版本
+      - name: 輸出 系統架構 / Node.js版本 / Rust版本
         run: |
-          node --version 
+          uname -m
+          node --version
           rustc --version
       
       - name: 安裝前端相依套件 (package-lock.json)
@@ -307,8 +311,9 @@ jobs:
       - name: 快取 Rust 相依套件
         uses: Swatinem/rust-cache@v2
 
-      - name: 輸出 Node.js版本 / Rust版本
+      - name: 輸出 系統架構 / Node.js版本 / Rust版本
         run: |
+          uname -m
           node --version
           rustc --version
 
@@ -374,8 +379,9 @@ jobs:
       - name: 快取 Rust 相依套件
         uses: Swatinem/rust-cache@v2
 
-      - name: 輸出 Node.js版本 / Rust版本
+      - name: 輸出 系統架構 / Node.js版本 / Rust版本
         run: |
+          uname -m
           node --version
           rustc --version
 
