@@ -288,18 +288,18 @@ jobs:
       - name: 取得原始碼
         uses: actions/checkout@v4
 
-      - name: 設定 Node.js (v20)
+      - name: 安裝 Linux 相依套件
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf xdg-utils
+
+      - name: 設定 Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
       - name: 安裝 Rust 工具鏈
         uses: dtolnay/rust-toolchain@stable
-
-      - name: 安裝 Linux 相依套件
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf xdg-utils
 
       - name: 安裝 Rust 編譯架構
         run: rustup target add ${{ env.TARGET }}
@@ -364,18 +364,18 @@ jobs:
       - name: 取得原始碼
         uses: actions/checkout@v4
 
-      - name: 設定 Node.js (v20)
+      - name: 安裝 Linux 相依套件
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf xdg-utils
+
+      - name: 設定 Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
       - name: 安裝 Rust 工具鏈
         uses: dtolnay/rust-toolchain@stable
-
-      - name: 安裝 Linux 相依套件
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf xdg-utils
 
       - name: 安裝 Rust 編譯架構
         run: rustup target add ${{ env.TARGET }}
