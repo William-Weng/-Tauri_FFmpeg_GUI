@@ -1,4 +1,4 @@
-name: 建立 Windows 版本
+name: 建立版本
 
 on:
   push:
@@ -151,19 +151,19 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  build-macOS-arm64:
-    name: aarch64-apple-darwin
+  build-macOS-x86_64:
+    name: x86_64-apple-darwin
     runs-on: macos-latest
     needs: create-release
     steps:
       - name: 設定相關環境變數
         run: | 
-          target="aarch64-apple-darwin"
-          isa="arm64"
+          target="x86_64-apple-darwin"
+          isa="x86_64"
           echo "TARGET=$target" >> $GITHUB_ENV
           echo "FILENAME=FFmpegGUI_macOS-$isa.dmg" >> $GITHUB_ENV
           echo "FILEPATH=$(ls src-tauri/target/$target/release/bundle/dmg/*.dmg)" >> $GITHUB_ENV
-          echo "UPLOAD_URL='${{ needs.create-release.outputs.upload_url }}'" >> $GITHUB_ENV
+          echo "UPLOAD_URL=${{ needs.create-release.outputs.upload_url }}" >> $GITHUB_ENV
 
       - name: 取得原始碼
         uses: actions/checkout@v4
@@ -212,19 +212,19 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  build-macOS-x86_64:
-    name: x86_64-apple-darwin
+  build-macOS-arm64:
+    name: aarch64-apple-darwin
     runs-on: macos-latest
     needs: create-release
     steps:
       - name: 設定相關環境變數
         run: | 
-          target="x86_64-apple-darwin"
-          isa="x86_64"
+          target="aarch64-apple-darwin"
+          isa="arm64"
           echo "TARGET=$target" >> $GITHUB_ENV
           echo "FILENAME=FFmpegGUI_macOS-$isa.dmg" >> $GITHUB_ENV
           echo "FILEPATH=$(ls src-tauri/target/$target/release/bundle/dmg/*.dmg)" >> $GITHUB_ENV
-          echo "UPLOAD_URL='${{ needs.create-release.outputs.upload_url }}'" >> $GITHUB_ENV
+          echo "UPLOAD_URL=${{ needs.create-release.outputs.upload_url }}" >> $GITHUB_ENV
 
       - name: 取得原始碼
         uses: actions/checkout@v4
