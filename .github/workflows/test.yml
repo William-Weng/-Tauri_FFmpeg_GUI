@@ -45,4 +45,4 @@ jobs:
       - name: 列印 upload_url
         run: |
             echo "${{ steps.create_release.outputs.upload_url }}"
-            echo "${{ toJson(steps.release_url.outputs.result) }}"
+            echo "${{ steps.release_url.outputs.result }}"
