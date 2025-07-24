@@ -68,13 +68,13 @@ jobs:
           isa="arm64"
           # RPM
           rpm_path=$(ls src-tauri/target/aarch64-unknown-linux-gnu/release/bundle/rpm/*.rpm)
-          rpm_filename=$(basename $rpm_path)
+          rpm_filename="FFmpegGUI_linux-${isa}.rpm"
           echo "RPM_PATH=$rpm_path" >> $GITHUB_ENV
           echo "RPM_FILENAME=$rpm_filename" >> $GITHUB_ENV
           echo "Found RPM: $rpm_filename"
           # DEB
           deb_path=$(ls src-tauri/target/aarch64-unknown-linux-gnu/release/bundle/deb/*.deb)
-          deb_filename=$(basename $deb_path)
+          deb_filename="FFmpegGUI_linux-${isa}.deb"
           echo "DEB_PATH=$deb_path" >> $GITHUB_ENV
           echo "DEB_FILENAME=$deb_filename" >> $GITHUB_ENV
           echo "Found DEB: $deb_filename"
