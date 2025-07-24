@@ -1,6 +1,8 @@
 # Dockerfile.arm64 - Builder Environment
 # 這個 Dockerfile 會建立一個包含所有依賴的「建置環境」
 # 它本身不包含任何原始碼。
+# docker build --platform linux/arm64 -f Dockerfile.arm64 -t tauri-builder:arm64 .
+# docker run --rm -v "$(pwd):/app" -v /app/node_modules tauri-builder:arm64 bash -c "npm install && npm run tauri build"
 
 # 1. 基礎映像
 FROM arm64v8/ubuntu:22.04
@@ -35,6 +37,3 @@ RUN apt-get install -y nodejs
 
 # 6. 準備建置目錄
 WORKDIR /app
-
-# docker build --platform linux/arm64 -f Dockerfile.arm64 -t tauri-builder:arm64 .
-# docker run --rm -v "$(pwd):/app" -v /app/node_modules tauri-builder:arm64 bash -c "npm install && npm run tauri build"
