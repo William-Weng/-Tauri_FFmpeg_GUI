@@ -3,7 +3,7 @@ name: 建立 Linux ARM64 版本
 on:
   push:
     tags:
-      - 'l*'
+      - 'a*'
   workflow_dispatch:
 
 permissions:
@@ -53,11 +53,7 @@ jobs:
 
       - name: 在容器中編譯應用程式
         run: |
-          docker run --rm --user $(id -u):$(id -g) \
-            -v "$(pwd):/app" \
-            -v "/app/node_modules" \
-            tauri-builder:arm64 \
-            bash -c "npm install && npm run tauri build"
+          docker run --rm --user $(id -u):$(id -g)             -v "$(pwd):/app"             -v "/app/node_modules"             tauri-builder:arm64             bash -c "npm install && npm run tauri build -- --target aarch64-unknown-linux-gnu"
 
       - name: 列出產物並設定路徑
         id: set_paths
