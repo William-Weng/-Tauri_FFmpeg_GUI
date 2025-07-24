@@ -1,0 +1,200 @@
+步驟一：在你的 x86_64 主機上設定環境 (一次性)
+
+  你需要在你的 AMD64 Linux 主機上安裝 Docker 和 QEMU 模擬器支援。
+
+    1 # 1. 安裝 Docker (如果尚未安裝，請參考官方文件)
+    2
+    3 # 2. 安裝 QEMU 使用者模式模擬器和 binfmt 支援
+    4 # 這讓你的核心能辨識並透過 QEMU 執行 ARM64 程式
+    5 sudo apt-get update
+    6 sudo apt-get install -y qemu-user-static
+    7
+    8 # 3. 註冊 QEMU 處理器，讓 Docker 可以使用它
+    9 # 這個指令會啟動一個特權容器來設定核心，讓它知道如何處理 aarch64 執行檔
+   10 docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+  完成這一步後，你的 Docker 就具備了執行非 x86_64 容器的能力。
+
+這個 Dockerfile 看起來會有點長，但每一步都有清晰的目標：
+
+    1 # Dockerfile.arm64
+    2 # 用於在 x86_64 主機上為 aarch64 (ARM64) 交叉編譯 Tauri 應用
+    3
+    4 # 1. 基礎映像：選擇一個官方的 ARM64 Ubuntu 映像
+    5 # Docker 會在 QEMU 的幫助下在你的 x86 主機上執行這個 ARM 容器
+    6 FROM arm64v8/ubuntu:22.04
+    7
+    8 # 2. 環境設定：避免在安裝過程中出現互動式提問
+    9 ENV DEBIAN_FRONTEND=noninteractive
+   10
+   11 # 3. 安裝 Tauri 的所有系統依賴 (ARM64 版本)
+   12 # 因為我們在 ARM64 容器中，apt 會自動抓取 aarch64 架構的套件
+   13 RUN apt-get update && apt-get install -y \
+   14     build-essential \
+   15     curl \
+   16     wget \
+   17     file \
+   18     libssl-dev \
+   19     appmenu-registrar \
+   20     pkg-config \
+   21     # --- 以下是 Tauri GUI 所需的核心 C/C++ 函式庫 ---
+   22     libwebkit2gtk-4.1-dev \
+   23     libappindicator3-dev \
+   24     librsvg2-dev \
+   25     patchelf \
+   26     # --- 清理 apt 快取以縮小映像體積 ---
+   27     && rm -rf /var/lib/apt/lists/*
+   28
+   29 # 4. 安裝 Rust (在 ARM64 環境中)
+   30 # 我們在容器內安裝一個完整的 ARM64 Rust 工具鏈
+   31 ENV RUSTUP_HOME=/usr/local/rustup \
+   32     CARGO_HOME=/usr/local/cargo \
+   33     PATH=/usr/local/cargo/bin:$PATH
+   34 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+   35
+   36 # 5. 安裝 Node.js 和 npm (在 ARM64 環境中)
+   37 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
+   38 RUN apt-get install -y nodejs
+   39
+   40 # 6. 準備建置目錄並複製專案檔案
+   41 WORKDIR /app
+   42 COPY . .
+   43
+   44 # 7. 安裝前端依賴並建置前端
+   45 # 這裡使用 npm，如果你用 yarn 或 pnpm，請替換指令
+   46 RUN npm install
+   47 RUN npm run build
+   48
+   49 # 8. 執行 Tauri 建置 (核心步驟)
+   50 # Tauri 會使用容器內的 ARM64 Rust 工具鏈和 C 函式庫進行編譯和打包
+   51 # 這會自動產生 .deb 和 .AppImage 檔案
+   52 RUN npm run tauri build
+   53
+   54 # 映像到此結束，最終的產物在 /app/src-tauri/target/release/bundle/ 裡面
+
+  ---
+
+  步驟三：執行 Docker 建置
+
+  現在，回到你的終端機，在專案根目錄下執行以下指令來開始建置。
+
+   1 # --platform linux/arm64 是關鍵，它告訴 Docker 使用 QEMU 模擬 ARM64 環境
+   2 # -f Dockerfile.arm64 指定我們剛剛建立的 Dockerfile
+   3 # -t my-tauri-app-arm64 為建置好的映像打上標籤
+   4 docker build \
+   5   --platform linux/arm64 \
+   6   -f Dockerfile.arm64 \
+   7   -t my-tauri-app-arm64 \
+   8   .
+
+  這個過程會需要一些時間，因為 Docker 正在：
+   1. 下載 ARM64 的 Ubuntu 映像。
+   2. 在模擬的 ARM64 環境中安裝所有依賴。
+   3. 編譯你的 Rust 程式碼和前端程式碼。
+   4. 打包成最終的 .AppImage 和 .deb 檔案。
+
+  ---
+
+  步驟四：從 Docker 映像中提取產物
+
+  建置成功後，你的 ARM64 應用程式被安全地封裝在 Docker 映像裡。我們需要把它們複製出來。
+
+    1 # 建立一個輸出目錄
+    2 mkdir -p dist/arm64
+    3
+    4 # 根據我們建置的映像，建立一個臨時的容器
+    5 # 我們不執行它，只是為了能從中複製檔案
+    6 docker create --name temp-builder my-tauri-app-arm64
+    7
+    8 # 從臨時容器中，將打包好的 bundle 目錄完整複製到主機的 dist/arm64/ 目錄下
+    9 docker cp temp-builder:/app/src-tauri/target/release/bundle/. ./dist/arm64/
+   10
+   11 # 移除臨時容器
+   12 docker rm temp-builder
+
+  大功告成！
+
+  現在，進入你主機的 dist/arm64/ 目錄，你會看到 appimage 和 deb 這兩個資料夾，裡面就包含了你可以在任何 ARM64
+   Linux 系統上執行的應用程式！
+
+  你可以使用 file 指令來驗證它們的架構：
+   1 file ./dist/arm64/appimage/*.AppImage
+  輸出應該會包含 ELF 64-bit LSB executable, AArch64，確認它是 ARM64 版本。
+
+
+
+接下來的步驟：GitHub Actions
+
+  為了讓你對下一步有更具體的概念，這裡是一個為你的 Tauri 專案量身打造的 GitHub Actions 工作流程 (workflow)
+  檔案的範例。
+
+  當你準備好時，你需要在你的專案根目錄下建立一個 .github/workflows/ 資料夾，然後在裡面建立一個像下面這樣的
+  build.yml 檔案。
+
+  `.github/workflows/build.yml`
+
+    1 # 這個 GitHub Actions 工作流程的名稱
+    2 name: Build Tauri ARM64 App
+    3
+    4 # 觸發條件：當有程式碼推送到 main 分支，或手動觸發時執行
+    5 on:
+    6   push:
+    7     branches: [ "main" ]
+    8   workflow_dispatch:
+    9
+   10 jobs:
+   11   build-arm64:
+   12     # 指定執行環境為最新的 Ubuntu
+   13     runs-on: ubuntu-latest
+   14
+   15     steps:
+   16       # 步驟 1: 取得你的專案原始碼
+   17       - name: Checkout repository
+   18         uses: actions/checkout@v4
+   19
+   20       # 步驟 2: 設定 QEMU，這是讓 x86_64 的 Runner 能夠執行 ARM64 Docker 容器的關鍵
+   21       - name: Set up QEMU
+   22         uses: docker/setup-qemu-action@v3
+   23
+   24       # 步驟 3: 使用我們寫好的 Dockerfile.arm64 來建置 Docker 映像
+   25       # 我們只建置，不推送到 Docker Hub，而是將結果匯出為一個 tar 檔案
+   26       - name: Build Docker image for ARM64
+   27         uses: docker/build-push-action@v5
+   28         with:
+   29           context: .
+   30           file: ./Dockerfile.arm64
+   31           platforms: linux/arm64
+   32           tags: my-tauri-app-arm64:latest
+   33           outputs: type=docker,dest=/tmp/image.tar
+   34
+   35       # 步驟 4: 從建置好的 Docker 映像中提取打包產物
+   36       - name: Extract build artifacts
+   37         run: |
+   38           # 建立一個目錄來存放產物
+   39           mkdir -p release
+   40           # 將剛剛建置的映像載入到 Docker 中
+   41           docker load --input /tmp/image.tar
+   42           # 建立一個臨時容器
+   43           docker create --name temp-builder my-tauri-app-arm64:latest
+   44           # 將打包好的 bundle 目錄複製出來
+   45           docker cp temp-builder:/app/src-tauri/target/release/bundle/. ./release/
+   46           # 移除臨時容器
+   47           docker rm temp-builder
+   48
+   49       # 步驟 5: 上傳打包好的檔案作為 GitHub Artifact
+   50       # 這樣你就可以在 Actions 的執行結果頁面下載它們
+   51       - name: Upload ARM64 Artifacts
+   52         uses: actions/upload-artifact@v4
+   53         with:
+   54           name: tauri-app-linux-arm64
+   55           path: ./release/
+
+  這個檔案做了什麼？
+
+  它和你手動操作的流程幾乎完全一樣，只是用自動化的指令稿來描述：
+   * actions/checkout: 取得程式碼。
+   * docker/setup-qemu-action: 自動完成 QEMU 的設定。
+   * docker/build-push-action: 執行 docker build 指令。
+   * run: ...: 執行 docker cp 來提取檔案。
+   * actions/upload-artifact: 將最終的 .AppImage 和 .deb 檔案打包上傳。
+
+  當你準備好進入這個階段時，我就可以幫你把這個工作流程檔案加到你的專案中。你做得非常好！

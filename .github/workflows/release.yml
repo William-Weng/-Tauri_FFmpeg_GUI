@@ -287,7 +287,7 @@ jobs:
           target="x86_64-unknown-linux-gnu"
           isa="x86_64"
           echo "TARGET=$target" >> $GITHUB_ENV
-          echo "FILENAME=FFmpegGUI_linux-$isa.AppImage" >> $GITHUB_ENV
+          echo "FILENAME=FFmpegGUI_linux-$isa.rpm" >> $GITHUB_ENV
 
       - name: 取得原始碼
         uses: actions/checkout@v4
@@ -324,10 +324,10 @@ jobs:
         run: npm run tauri build -- --target ${{ env.TARGET }}
       
       - name: 列出產物目錄
-        run: ls src-tauri/target/${{ env.TARGET }}/release/bundle/appimage/
+        run: ls src-tauri/target/${{ env.TARGET }}/release/bundle/rpm/
 
       - name: 設定 FILEPATH 變數
-        run: echo "FILEPATH=$(ls src-tauri/target/${{ env.TARGET }}/release/bundle/appimage/*.AppImage)" >> $GITHUB_ENV
+        run: echo "FILEPATH=$(ls src-tauri/target/${{ env.TARGET }}/release/bundle/rpm/*.rpm)" >> $GITHUB_ENV
 
       - name: 上傳產物
         uses: actions/upload-artifact@v4
