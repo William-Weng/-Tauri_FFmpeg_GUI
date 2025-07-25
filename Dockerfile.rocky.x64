@@ -1,0 +1,38 @@
+# Dockerfile.rocky.x64 - Rocky Linux Builder Environment
+# This Dockerfile creates a build environment for RPM packages.
+# It does not contain any source code itself.
+# docker build --platform linux/amd64 -f Dockerfile.rocky.x64 -t tauri-builder:rocky-x64 .
+# docker run --rm -v "$(pwd):/app" -v /app/node_modules tauri-builder:rocky-x64 bash -c "npm install && npm run tauri build"
+
+# 1. Base Image (Rocky Linux 9 for amd64/x86_64)
+FROM rockylinux:9
+
+# 2. Install Tauri's system dependencies for RHEL/Rocky/Fedora
+RUN dnf install -y 'dnf-command(config-manager)' && \
+    dnf config-manager --set-enabled crb && \
+    dnf install -y \
+    gcc-c++ \
+    make \
+    curl \
+    wget \
+    file \
+    openssl-devel \
+    pkgconf \
+    webkit2gtk4.1-devel \
+    libappindicator-gtk3-devel \
+    librsvg2-devel \
+    patchelf && \
+    dnf clean all
+
+# 3. Install Rust
+ENV RUSTUP_HOME=/usr/local/rustup \
+    CARGO_HOME=/usr/local/cargo \
+    PATH=/usr/local/cargo/bin:$PATH
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+
+# 4. Install Node.js and npm (using NodeSource script)
+RUN curl -fsSL https://rpm.nodesource.com/setup_20.x | bash -
+RUN dnf install -y nodejs
+
+# 5. Prepare build directory
+WORKDIR /app

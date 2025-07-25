@@ -32,6 +32,11 @@ jobs:
     runs-on: windows-latest
     needs: create-release
     steps:
+      - name: 檢查 Windows 版本
+        run: |
+          echo "Processor Architecture: $env:PROCESSOR_ARCHITECTURE"
+          systeminfo | findstr /B /C:"OS Name" /C:"OS Version"
+
       - name: 設定相關環境變數
         run: | 
           $target = "x86_64-pc-windows-msvc"
@@ -57,9 +62,8 @@ jobs:
       - name: 快取 Rust 相依套件
         uses: Swatinem/rust-cache@v2
 
-      - name: 輸出 系統架構 / Node.js版本 / Rust版本
+      - name: 輸出 Node.js版本 / Rust版本
         run: |
-          echo $env:PROCESSOR_ARCHITECTURE
           node --version
           rustc --version
 
@@ -94,6 +98,11 @@ jobs:
     runs-on: windows-latest
     needs: create-release
     steps:
+      - name: 檢查 Windows 版本
+        run: |
+          echo "Processor Architecture: $env:PROCESSOR_ARCHITECTURE"
+          systeminfo | findstr /B /C:"OS Name" /C:"OS Version"
+
       - name: 設定相關環境變數
         run: | 
           $target = "aarch64-pc-windows-msvc"
@@ -119,9 +128,8 @@ jobs:
       - name: 快取 Rust 相依套件
         uses: Swatinem/rust-cache@v2
 
-      - name: 輸出 系統架構 / Node.js版本 / Rust版本
+      - name: 輸出 Node.js版本 / Rust版本
         run: |
-          echo $env:PROCESSOR_ARCHITECTURE
           node --version
           rustc --version
 
@@ -156,6 +164,11 @@ jobs:
     runs-on: macos-latest
     needs: create-release
     steps:
+      - name: 檢查 macOS 版本
+        run: |
+          uname -m
+          sw_vers
+
       - name: 設定相關環境變數
         run: | 
           target="x86_64-apple-darwin"
@@ -219,6 +232,11 @@ jobs:
     runs-on: macos-latest
     needs: create-release
     steps:
+      - name: 檢查 macOS 版本
+        run: |
+          uname -m
+          sw_vers
+
       - name: 設定相關環境變數
         run: | 
           target="aarch64-apple-darwin"
@@ -243,9 +261,8 @@ jobs:
       - name: 快取 Rust 相依套件
         uses: Swatinem/rust-cache@v2
 
-      - name: 輸出 系統架構 / Node.js版本 / Rust版本
+      - name: 輸出 Node.js版本 / Rust版本
         run: |
-          uname -m
           node --version
           rustc --version
       
@@ -280,11 +297,16 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  build-linux-x86_64:
+  build-ubuntu-x86_64:
     name: Linux x86_64
     runs-on: ubuntu-latest
     needs: create-release
     steps:
+      - name: 檢查 Ubuntu 版本
+        run: |
+          uname -m
+          cat /etc/os-release
+
       - name: 設定相關環境變數
         run: | 
           target="x86_64-unknown-linux-gnu"
@@ -315,9 +337,8 @@ jobs:
       - name: 快取 Rust 相依套件
         uses: Swatinem/rust-cache@v2
 
-      - name: 輸出 系統架構 / Node.js版本 / Rust版本
+      - name: 輸出 Node.js版本 / Rust版本
         run: |
-          uname -m
           node --version
           rustc --version
 
