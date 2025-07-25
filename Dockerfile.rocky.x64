@@ -8,20 +8,21 @@
 FROM rockylinux/rockylinux:9
 
 # 2. Install Tauri's system dependencies for RHEL/Rocky/Fedora
-RUN dnf install -y 'dnf-command(config-manager)' && \
-    dnf config-manager --set-enabled crb && \
-    dnf install -y \
-    gcc-c++ \
-    make \
-    curl \
-    wget \
-    file \
-    openssl-devel \
-    pkgconf \
-    webkit2gtk4.1-devel \
-    libappindicator-gtk3-devel \
-    librsvg2-devel \
-    patchelf && \
+RUN dnf update -y &&\
+    dnf install -y dnf-plugins-core &&\
+    dnf config-manager --set-enabled crb &&\
+    dnf install -y\
+    gcc-c++\
+    make\
+    curl\
+    wget\
+    file\
+    openssl-devel\
+    pkgconf\
+    webkit2gtk4.1-devel\
+    libappindicator-gtk3-devel\
+    librsvg2-devel\
+    patchelf &&\
     dnf clean all
 
 # 3. Install Rust
