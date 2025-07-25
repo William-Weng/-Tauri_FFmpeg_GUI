@@ -34,7 +34,7 @@ jobs:
     steps:
       - name: 檢查 Windows 版本
         run: |
-          echo "Processor Architecture: $env:PROCESSOR_ARCHITECTURE"
+          echo "$env:PROCESSOR_ARCHITECTURE"
           systeminfo | findstr /B /C:"OS Name" /C:"OS Version"
 
       - name: 設定相關環境變數
@@ -100,7 +100,7 @@ jobs:
     steps:
       - name: 檢查 Windows 版本
         run: |
-          echo "Processor Architecture: $env:PROCESSOR_ARCHITECTURE"
+          echo "$env:PROCESSOR_ARCHITECTURE"
           systeminfo | findstr /B /C:"OS Name" /C:"OS Version"
 
       - name: 設定相關環境變數

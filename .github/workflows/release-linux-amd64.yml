@@ -1,4 +1,4 @@
-name: 建立版本
+name: 建立 Linux AMD64 版本
 
 on:
   push:
@@ -106,7 +106,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: create-release
     container:
-      image: registry.access.redhat.com/ubi8/ubi:latest
+      image: rockylinux:9
     steps:
       - name: 檢查 RHEL 版本
         run: |

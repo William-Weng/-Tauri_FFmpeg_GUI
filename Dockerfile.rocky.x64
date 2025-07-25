@@ -5,7 +5,7 @@
 # docker run --rm -v "$(pwd):/app" -v /app/node_modules tauri-builder:rocky-x64 bash -c "npm install && npm run tauri build"
 
 # 1. Base Image (Rocky Linux 9 for amd64/x86_64)
-FROM rockylinux:9
+FROM rockylinux/rockylinux:9
 
 # 2. Install Tauri's system dependencies for RHEL/Rocky/Fedora
 RUN dnf install -y 'dnf-command(config-manager)' && \
