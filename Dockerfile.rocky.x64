@@ -1,39 +1,37 @@
 # Dockerfile.rocky.x64 - Rocky Linux Builder Environment
 # This Dockerfile creates a build environment for RPM packages.
-# It does not contain any source code itself.
-# docker build --platform linux/amd64 -f Dockerfile.rocky.x64 -t tauri-builder:rocky-x64 .
-# docker run --rm -v "$(pwd):/app" -v /app/node_modules tauri-builder:rocky-x64 bash -c "npm install && npm run tauri build"
-
-# 1. Base Image (Rocky Linux 9 for amd64/x86_64)
 FROM rockylinux/rockylinux:9
 
-# 2. Install Tauri's system dependencies for RHEL/Rocky/Fedora
-RUN dnf update -y &&\
-    dnf install -y dnf-plugins-core &&\
-    dnf config-manager --set-enabled crb &&\
-    dnf install -y\
-    gcc-c++\
-    make\
-    curl\
-    wget\
-    file\
-    openssl-devel\
-    pkgconf\
-    webkit2gtk4.1-devel\
-    libappindicator-gtk3-devel\
-    librsvg2-devel\
-    patchelf &&\
-    dnf clean all
+# Update and enable the CRB repository
+RUN dnf update -y
+RUN dnf install -y dnf-utils
+RUN dnf config-manager --set-enabled crb
 
-# 3. Install Rust
+# Install dependencies
+RUN dnf groupinstall -y "Development Tools"
+RUN dnf install -y openssl-devel
+RUN dnf install -y gtk3-devel
+RUN dnf install -y webkit2gtk3-devel
+RUN dnf install -y glib2-devel
+RUN dnf install -y wget
+RUN dnf install -y file
+RUN dnf install -y librsvg2-devel
+RUN dnf install -y libappindicator-gtk3-devel
+
+# Clean up the dnf cache
+RUN dnf clean all
+
+# Install Rust
 ENV RUSTUP_HOME=/usr/local/rustup \
     CARGO_HOME=/usr/local/cargo \
     PATH=/usr/local/cargo/bin:$PATH
+
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 
-# 4. Install Node.js and npm (using NodeSource script)
+# Install Node.js and npm
 RUN curl -fsSL https://rpm.nodesource.com/setup_20.x | bash -
 RUN dnf install -y nodejs
 
-# 5. Prepare build directory
+# Prepare build directory
 WORKDIR /app
+

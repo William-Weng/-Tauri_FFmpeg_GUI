@@ -27,8 +27,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  build-windows-x86_64:
-    name: Windows x86_64
+  build-windows-amd64:
+    name: Windows amd64
     runs-on: windows-latest
     needs: create-release
     steps:
@@ -40,7 +40,7 @@ jobs:
       - name: 設定相關環境變數
         run: | 
           $target = "x86_64-pc-windows-msvc"
-          $isa = "x86_64"
+          $isa = "amd64"
           echo "TARGET=$target" | Add-Content -Path $env:GITHUB_ENV
           echo "FILENAME=FFmpegGUI_windows-$isa.exe" | Add-Content -Path $env:GITHUB_ENV
           echo "FILEPATH=src-tauri/target/$target/release/tauri_ffmpeg_gui.exe" | Add-Content -Path $env:GITHUB_ENV
@@ -93,8 +93,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  build-windows-arm64:
-    name: Windows arm64
+  build-windows-aarch64:
+    name: Windows aarch64
     runs-on: windows-latest
     needs: create-release
     steps:
@@ -106,7 +106,7 @@ jobs:
       - name: 設定相關環境變數
         run: | 
           $target = "aarch64-pc-windows-msvc"
-          $isa = "arm64"
+          $isa = "aarch64"
           echo "TARGET=$target" | Add-Content -Path $env:GITHUB_ENV
           echo "FILENAME=FFmpegGUI_windows-$isa.exe" | Add-Content -Path $env:GITHUB_ENV
           echo "FILEPATH=src-tauri/target/$target/release/tauri_ffmpeg_gui.exe" | Add-Content -Path $env:GITHUB_ENV
@@ -159,8 +159,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  build-macOS-x86_64:
-    name: macOS x86_64
+  build-macOS-amd64:
+    name: macOS amd64
     runs-on: macos-latest
     needs: create-release
     steps:
@@ -172,7 +172,7 @@ jobs:
       - name: 設定相關環境變數
         run: | 
           target="x86_64-apple-darwin"
-          isa="x86_64"
+          isa="amd64"
           echo "TARGET=$target" >> $GITHUB_ENV
           echo "FILENAME=FFmpegGUI_macOS-$isa.dmg" >> $GITHUB_ENV
 
@@ -227,8 +227,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  build-macOS-arm64:
-    name: macOS arm64
+  build-macOS-aarch64:
+    name: macOS aarch64
     runs-on: macos-latest
     needs: create-release
     steps:
@@ -240,7 +240,7 @@ jobs:
       - name: 設定相關環境變數
         run: | 
           target="aarch64-apple-darwin"
-          isa="arm64"
+          isa="aarch64"
           echo "TARGET=$target" >> $GITHUB_ENV
           echo "FILENAME=FFmpegGUI_macOS-$isa.dmg" >> $GITHUB_ENV
 
@@ -297,8 +297,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  build-ubuntu-x86_64:
-    name: Linux x86_64
+  build-ubuntu-amd64:
+    name: Ubuntu amd64
     runs-on: ubuntu-latest
     needs: create-release
     steps:
@@ -310,10 +310,10 @@ jobs:
       - name: 設定相關環境變數
         run: | 
           target="x86_64-unknown-linux-gnu"
-          isa="x86_64"
+          isa="amd64"
           echo "TARGET=$target" >> $GITHUB_ENV
-          echo "FILENAME_RPM=FFmpegGUI_linux-$isa.rpm" >> $GITHUB_ENV
-          echo "FILENAME_DEB=FFmpegGUI_linux-$isa.deb" >> $GITHUB_ENV
+          echo "FILENAME_RPM=FFmpegGUI_ubuntu-$isa.rpm" >> $GITHUB_ENV
+          echo "FILENAME_DEB=FFmpegGUI_ubuntu-$isa.deb" >> $GITHUB_ENV
 
       - name: 取得原始碼
         uses: actions/checkout@v4
